@@ -1,5 +1,6 @@
 ### Import Libraries
 import pandas as pd
+import os
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
 # Handle Missing Values
@@ -50,3 +51,19 @@ if __name__ == "__main__":
     processed_df.to_csv(output_folder, index=False)
     print(f"***@@@  Processed data saved to {output_folder}")
 
+
+
+# Folder path
+data_folder = 'data'
+
+# Get all CSV files in the folder
+file_list = [f for f in os.listdir(data_folder) if f.endswith('.csv')]
+
+# Load and concatenate
+df_list = [pd.read_csv(os.path.join(data_folder, file)) for file in file_list]
+df = pd.concat(df_list, ignore_index=True)
+
+# Quick check
+print(f"Loaded {len(file_list)} files")
+print(f"Combined shape: {df.shape}")
+print(df.head())
