@@ -1,6 +1,12 @@
-### Import Libraries
+# Import Libraries
 import pandas as pd
+import os
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
+
+# Set Project Paths
+project_root = os.path.dirname(os.path.abspath(__file__))
+data_folder = os.path.join(project_root, 'data')
+print("📁 Project root initialized as:", project_root)
 
 # Handle Missing Values
 def handle_missing_values(df, method='mean'):
@@ -14,7 +20,7 @@ def handle_missing_values(df, method='mean'):
         raise ValueError("Unsupported Missing Value Handling Method")
     return df
 
-# Data Normalization
+# Normalize Features
 def normalize_features(df, method='minmax'):
     numeric_cols = df.select_dtypes(include='number').columns
     if method == 'minmax':
@@ -23,30 +29,97 @@ def normalize_features(df, method='minmax'):
         scaler = StandardScaler()
     else:
         raise ValueError("Unsupported Normalization Method")
-    
     df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
     return df
 
-# Preprocessing PipeLine
+# Preprocessing Pipeline
 def preprocess_data(df, missing_method='mean', norm_method='minmax'):
     df = handle_missing_values(df, method=missing_method)
-    print("***  Missing values handled using:", missing_method)
+    print("*** Missing values handled using:", missing_method)
     df = normalize_features(df, method=norm_method)
-    print("****  Features normalized using:", norm_method)
-    print("@@@&& Preprocessing complete.")
+    print("**** Features normalized using:", norm_method)
+    print("@@@ Preprocessing complete.")
     return df
 
+# Load All Processed CSVs
+def load_processed_data():
+    files = [f for f in os.listdir(data_folder) if f.startswith('processed_') and f.endswith('.csv')]
+    if not files:
+        print("⚠ No processed CSV files found.")
+        return None
 
-### Test the Preprocessing
+    df_list = []
+    for f in files:
+        file_path = os.path.join(data_folder, f)
+        try:
+            df = pd.read_csv(file_path)
+            df_list.append(df)
+            print(f"✅ Loaded processed file: {f} — shape: {df.shape}")
+        except Exception as e:
+            print(f"❌ Error loading '{f}': {e}")
+
+    combined_df = pd.concat(df_list, ignore_index=True)
+    print(f"\n📊 Combined processed dataset shape: {combined_df.shape}")
+    return combined_df
+
+# Batch Preprocessing of Raw CSVs
+csv_files = [f for f in os.listdir(data_folder) if f.lower().endswith('.csv')]
+if not csv_files:
+    print("⚠ No CSV files found in the data folder.")
+else:
+    print(f"📦 Found {len(csv_files)} CSV files.")
+
+for file_name in csv_files:
+    file_path = os.path.join(data_folder, file_name)
+    try:
+        df = pd.read_csv(file_path)
+        print(f"\n✅ Loaded '{file_name}' — shape: {df.shape}")
+        processed_df = preprocess_data(df)
+
+        # Strip repeated 'processed_' prefixes
+        base_name = file_name
+        while base_name.startswith("processed_"):
+            base_name = base_name[len("processed_"):]
+        output_name = f"processed_{base_name}"
+
+        output_path = os.path.join(data_folder, output_name)
+        processed_df.to_csv(output_path, index=False)
+        print(f"💾 Saved processed data to: {output_path}")
+
+    except Exception as e:
+        print(f"❌ Error processing '{file_name}': {e}")
+
+# Model Training & Saving
 if __name__ == "__main__":
-    path_folder = r"Cleaned Data csv"
-    df = pd.read_csv(path_folder)
+    df = load_processed_data()
+    if df is not None:
+        print("📋 Columns in combined dataset:", df.columns.tolist())
 
-    processed_df = preprocess_data(df)
-    print(processed_df.head())
+        target_column = 'Class'
+        if target_column in df.columns:
+            from sklearn.model_selection import train_test_split
+            X = df.drop(target_column, axis=1)
+            y = df[target_column]
 
-    ### To Save the Preprocessing Data
-    output_folder = r"Processed Data csv"
-    processed_df.to_csv(output_folder, index=False)
-    print(f"***@@@  Processed data saved to {output_folder}")
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+            print(f"✅ Training set shape: {X_train.shape}")
+            print(f"✅ Test set shape: {X_test.shape}")
 
+            from sklearn.ensemble import RandomForestClassifier
+            model = RandomForestClassifier(n_estimators=100, random_state=42)
+            model.fit(X_train, y_train)
+            print("✅ Model training complete.")
+
+            from sklearn.metrics import classification_report, confusion_matrix
+            y_pred = model.predict(X_test)
+            print("📉 Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+            print("📋 Classification Report:\n", classification_report(y_test, y_pred))
+
+            import joblib
+            model_path = os.path.join(project_root, 'fraud_model.pkl')
+            joblib.dump(model, model_path)
+            print(f"💾 Model saved to: {model_path}")
+        else:
+            print(f"🚫 Target column '{target_column}' not found. Available columns: {df.columns.tolist()}")
+    else:
+        print("⚠ No processed data available for training.")

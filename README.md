@@ -1,98 +1,89 @@
-💳 Financial Fraud Detection Model with Dashboard:
+# 💳 Financial Fraud Detection Model with Dashboard
 
-📌 Project Overview
+## 📌 Project Overview
 
-The Financial Fraud Detection Model leverages Machine Learning (ML) and Data Analytics to identify suspicious transactions, detect fraudulent activities, and provide real-time insights via an interactive dashboard.
-This system is essential for banks, fintech companies, and financial institutions to mitigate risks and prevent financial fraud.
+This project leverages Machine Learning (ML), Data Analytics, and Real-Time Monitoring to detect fraudulent financial transactions. It is designed for banks, fintech companies, and financial institutions to mitigate risk and prevent fraud. The system includes supervised and unsupervised models, anomaly detection, and an interactive dashboard for real-time insights.
 
+---
 
-✨ Key Features
+## ✨ Key Features
 
-1️⃣ Data Acquisition & Preprocessing:
+### 1️⃣ Data Acquisition & Preprocessing
+- Collect transactional data from:
+  - Banking systems
+  - Payment gateways
+  - Hugging Face datasets (`hugging_id`)
+- Perform ETL operations
+- Handle missing values and apply normalization
+- Apply feature engineering to capture behavioral patterns and anomalies
 
-Collect transactional data from:
+### 2️⃣ Fraud Detection Algorithms
 
-Banking systems
+#### 🔹 Supervised Models
+- Logistic Regression
+- Decision Trees & Random Forest
+- Gradient Boosting (XGBoost, LightGBM)
 
-Payment gateways
+#### 🔹 Unsupervised Models
+- Isolation Forest
+- One-Class SVM
+- Autoencoders (deep learning anomaly detection)
 
-Hugging Face datasets (hugging id)
+#### 🔹 Graph-Based Analysis *(planned)*
+- Detect fraudulent networks and relationships between entities
 
-Perform ETL (Extract, Transform, Load) operations
+### 3️⃣ Real-Time Fraud Monitoring *(planned)*
+- Stream transaction data using Apache Kafka / Spark Streaming
+- Implement alerting system for high-risk transactions
 
-Handle missing values and apply data normalization
+### 4️⃣ Interactive Dashboard & Reporting
+- Real-time fraud visualization with heatmaps, bar charts, anomaly scores
+- Built with Streamlit
 
-Apply feature engineering to capture behavioral patterns & anomalies
+---
 
+## ✅ Expected Deliverables
+- 📂 Cleaned dataset & preprocessing scripts
+- 🤖 Fraud detection model implementations (supervised, unsupervised, deep learning)
+- 📊 Evaluation metrics (Precision, Recall, F1-Score, AUC)
+- 📉 Interactive fraud detection dashboard
+- 📁 GitHub repository with documentation
+- 🎥 Final presentation or video demo *(optional)*
 
-2️⃣ Fraud Detection Algorithms:
+---
 
-🔹 Supervised Models
+## 🔧 Core Modules
 
-Logistic Regression
+| Module | Description |
+|--------|-------------|
+| [`Preprocessing.py`](./Preprocessing.py) | Cleans and normalizes data, trains and saves fraud detection model |
+| [`predict.py`](./predict.py) | Loads saved model and runs predictions on new data |
+| [`Feature_Engineering.py`](./Feature_Engineering.py) | Creates new features to improve model performance |
+| [`ETL_Pipeline.py`](./ETL_Pipeline.py) | Handles data extraction, transformation, and loading |
+| [`Dashboard.py`](./Dashboard.py) | Streamlit-based dashboard for fraud visualization |
+| [`Supervised_Models.ipynb`](./Supervised_Models.ipynb) | Experiments with classification models |
+| [`Unsupervised_Models.ipynb`](./Unsupervised_Models.ipynb) | Experiments with anomaly detection models |
 
-Decision Trees & Random Forest
+---
 
-Gradient Boosting (XGBoost, LightGBM)
+## 🎯 Learning Outcomes
+- Strong understanding of fraud detection techniques
+- Hands-on experience with real-world financial transaction data
+- Implementation of supervised, unsupervised, and graph-based models
+- Real-time data streaming and anomaly detection
+- Dashboard development for fraud monitoring
 
+---
 
-🔹 Unsupervised Models
+## 🔮 Future Enhancements
+- AI-driven risk scoring for customer creditworthiness
+- Blockchain-based fraud prevention
+- Mobile app integration for instant fraud alerts
 
-Isolation Forest
+---
 
-One-Class SVM
+## 📥 How to Run
 
-Autoencoders (deep learning anomaly detection)
-
-
-🔹 Graph-Based Analysis
-
-Detect fraudulent networks and relationships between entities
-
-3️⃣ Real-Time Fraud Monitoring:
-
-Stream transaction data using Apache Kafka / Spark Streaming
-
-Implement alerting system for high-risk transactions
-
-4️⃣ Interactive Dashboard & Reporting:
-
-Real-time fraud visualization with heatmaps, bar charts, anomaly scores
-
-Built with Streamlit.
-
-✅ Expected Deliverables:
-
-📂 Cleaned dataset & preprocessing scripts
-
-🤖 Fraud detection model implementations (supervised, unsupervised, deep learning)
-
-📊 Evaluation metrics (Precision, Recall, F1-Score, AUC)
-
-📉 Interactive fraud detection dashboard
-
-📁 GitHub repository with documentation
-
-🎥 Final presentation or video demo
-
-
-🎯 Learning Outcomes:
-
-Strong understanding of fraud detection techniques
-
-Hands-on experience with real-world financial transaction data
-
-Ability to implement supervised, unsupervised, and graph-based models
-
-Skills in real-time data streaming & anomaly detection
-
-Dashboard development for fraud monitoring
-
-
-🔮 Future Enhancements:
-
-AI-driven risk scoring for customer creditworthiness
-
-Blockchain-based fraud prevention
-
-Mobile app integration for instant fraud alerts
+### 🔹 Preprocessing & Model Training
+```bash
+python Preprocessing.py
