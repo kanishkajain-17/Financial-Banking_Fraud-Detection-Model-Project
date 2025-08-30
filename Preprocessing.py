@@ -33,12 +33,15 @@ def normalize_features(df, method='minmax'):
     return df
 
 # Preprocessing Pipeline
-def preprocess_data(df, missing_method='mean', norm_method='minmax'):
-    df = handle_missing_values(df, method=missing_method)
-    print("*** Missing values handled using:", missing_method)
-    df = normalize_features(df, method=norm_method)
-    print("**** Features normalized using:", norm_method)
-    print("@@@ Preprocessing complete.")
+def preprocess_data(df):
+    # Drop label column if present
+    df = df.drop(columns=["Class"], errors="ignore")
+
+    # Example preprocessing
+    df = df.fillna(0)
+    numeric_cols = df.select_dtypes(include='number').columns
+    df[numeric_cols] = (df[numeric_cols] - df[numeric_cols].mean()) / df[numeric_cols].std()
+
     return df
 
 # Load All Processed CSVs
@@ -119,3 +122,4 @@ if __name__ == "__main__":
             model_path = os.path.join(project_root, 'fraud_model.pkl')
             joblib.dump(model, model_path)
             print(f"💾 Model saved to: {model_path}")
+
