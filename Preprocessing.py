@@ -34,8 +34,8 @@ def normalize_features(df, method='minmax'):
 
 # Preprocessing Pipeline
 def preprocess_data(df):
-    # Drop label column if present
-    df = df.drop(columns=["Class"], errors="ignore")
+    # Drop label columns that shouldn't be used for prediction
+    df = df.drop(columns=["Class", "is_fraud"], errors="ignore")
 
     # Example preprocessing
     df = df.fillna(0)
@@ -122,4 +122,5 @@ if __name__ == "__main__":
             model_path = os.path.join(project_root, 'fraud_model.pkl')
             joblib.dump(model, model_path)
             print(f"💾 Model saved to: {model_path}")
+
 
