@@ -122,5 +122,3 @@ if __name__ == "__main__":
             model_path = os.path.join(project_root, 'fraud_model.pkl')
             joblib.dump(model, model_path)
             print(f"💾 Model saved to: {model_path}")
-
-
